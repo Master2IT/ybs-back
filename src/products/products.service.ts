@@ -83,18 +83,7 @@ export class ProductsService {
     return tags?.map((tag) => tag.name) || [];
   };
   filterReview = async (id) => {
-    const reviews = await this.reviewsService.getReviewsByProductId(id);
-
-    return (
-      reviews?.map((review) => ({
-        _id: review._id,
-        rate: review.rate,
-        title: review.title,
-        description: review.description,
-        recommend: review.recommend,
-        images: review.images,
-      })) || []
-    );
+    return await this.reviewsService.getReviewsByProductId(id);
   };
 
   async getAll() {

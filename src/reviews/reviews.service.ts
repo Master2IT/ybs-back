@@ -43,9 +43,22 @@ export class ReviewsService {
   }
 
   async getReviewsByProductId(productId) {
-    const reviews = this.reviewsModel.find({ productId });
-    const images = this.reviewGalleriesService.getAll();
-    return { ...reviews, images };
+    const reviews = await this.reviewsModel.find({
+      productId,
+      // status: 'active',
+    });
+    return await Promise.all(
+      reviews.map(async (review) => ({
+        _id: review._id,
+        rate: review.rate,
+        title: review.title,
+        description: review.description,
+        recommend: review.recommend,
+        images: await this.reviewGalleriesService.getReviewGalleriesById(
+          review._id,
+        ),
+      })),
+    );
   }
 
   async create(review: CreateReviewsDto, user) {

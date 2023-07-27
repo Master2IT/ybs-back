@@ -1,15 +1,19 @@
 import {
-  IsArray,
   IsBoolean,
+  IsInt,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateReviewsDto {
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(5)
+  @IsInt()
   rate: number;
   @IsString()
   @IsNotEmpty()
@@ -19,9 +23,6 @@ export class CreateReviewsDto {
   description: string;
   @IsBoolean()
   recommend: boolean;
-  @IsString()
-  @IsOptional()
-  galleriesId: string;
   @IsString()
   @IsNotEmpty()
   productId: string;

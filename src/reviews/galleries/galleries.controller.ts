@@ -35,11 +35,11 @@ export class ReviewGalleriesController {
       fileFilter: multerOptions.fileFilter,
       storage: multerOptions.storage,
       limits: multerOptions.limits,
+      dest: './uploads',
     }),
   )
   @UseGuards(AuthGuard('jwt'))
-  async;
-  upload(
+  async upload(
     @UploadedFiles()
     images: Array<Express.Multer.File>,
     @Body()

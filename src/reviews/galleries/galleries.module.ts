@@ -12,5 +12,6 @@ import { ReviewGalleriesSchema } from './galleries.schema';
   ],
   providers: [ReviewGalleriesService],
   controllers: [ReviewGalleriesController],
+  exports: [ReviewGalleriesService],
 })
 export class ReviewGalleriesModule {}

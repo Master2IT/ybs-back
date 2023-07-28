@@ -158,7 +158,7 @@ export class ProductsService {
       colors: await this.filterColors(found?._doc?.attributes?.colorIds),
       sizes: await this.filterSizes(found?._doc?.attributes?.sizeIds),
       tags: await this.filterTags(found?._doc?.tagIds),
-      review: await this.filterReview(found._doc._id),
+      reviews: await this.filterReview(found._doc._id),
     };
   }
 

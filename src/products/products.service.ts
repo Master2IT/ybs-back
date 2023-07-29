@@ -85,6 +85,16 @@ export class ProductsService {
   filterReview = async (id) => {
     return await this.reviewsService.getReviewsByProductId(id);
   };
+  calculateReview = async (id) => {
+    const reviews = await this.filterReview(id);
+    const average = (array) =>
+      Math.floor(array.reduce((a, b) => a + b) / array.length);
+
+    return {
+      rate: average(reviews.map((review) => review.rate)),
+      percent: (average(reviews.map((review) => review.rate)) / 5) * 100,
+    };
+  };
 
   async getAll() {
     const products = await this.productsModel.find({ status: 'active' });
@@ -159,6 +169,7 @@ export class ProductsService {
       sizes: await this.filterSizes(found?._doc?.attributes?.sizeIds),
       tags: await this.filterTags(found?._doc?.tagIds),
       reviews: await this.filterReview(found._doc._id),
+      review: await this.calculateReview(found._doc._id),
     };
   }
 

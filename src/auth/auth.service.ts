@@ -6,12 +6,14 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {
     this.usersService = usersService;
   }
@@ -55,11 +57,26 @@ export class AuthService {
       email,
     });
     //   Send an email to user email;
+    // return this.mailerService
+    //   .sendMail({
+    //     to: email, // list of receivers
+    //     from: 'mahdavi2it@gmail.com', // sender address
+    //     subject: 'Testing Nest MailerModule ✔', // Subject line
+    //     text: 'Verification Code', // plaintext body
+    //     html: `<div>Code is: <b>${generateCode}</b></div>`, // HTML body content
+    //   })
+    //   .then(() => {
+    //     return 'Code Sent to your email!';
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
     return {
       code: generateCode,
     };
   }
+
   async adminLogin({ email, password }) {
     const findUser = await this.usersService.findUserByEmailAndPassword({
       email,

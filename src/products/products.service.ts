@@ -14,6 +14,7 @@ import { DiscountsService } from '../discounts/discounts.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TagsService } from '../tags/tags.service';
 import { ReviewsService } from '../reviews/reviews.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ProductsService {
@@ -33,6 +34,8 @@ export class ProductsService {
     private readonly tagsService: TagsService,
     @Inject(ReviewsService)
     private readonly reviewsService: ReviewsService,
+    @Inject(UsersService)
+    private readonly usersService: UsersService,
   ) {}
 
   calculateDiscount = async (item: any) => {
@@ -83,7 +86,15 @@ export class ProductsService {
     return tags?.map((tag) => tag.name) || [];
   };
   filterReview = async (id) => {
-    return await this.reviewsService.getReviewsByProductId(id);
+    const reviews = await this.reviewsService.getReviewsByProductId(id);
+    return Promise.all(
+      reviews
+        .map(async (review: any) => ({
+          ...review,
+          user: await this.usersService.getUserNameById(review.userId),
+        }))
+        .reverse(),
+    );
   };
   calculateReview = async (id) => {
     const reviews = await this.filterReview(id);
@@ -91,8 +102,8 @@ export class ProductsService {
       Math.floor(array.reduce((a, b) => a + b) / array.length);
 
     return {
-      rate: average(reviews.map((review) => review.rate)),
-      percent: (average(reviews.map((review) => review.rate)) / 5) * 100,
+      rate: average(reviews.map((review: any) => review.rate)),
+      percent: (average(reviews.map((review: any) => review.rate)) / 5) * 100,
     };
   };
 

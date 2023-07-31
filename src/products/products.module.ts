@@ -10,6 +10,7 @@ import { DiscountsModule } from '../discounts/discounts.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { TagsModule } from '../tags/tags.module';
 import { ReviewsModule } from '../reviews/reviews.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReviewsModule } from '../reviews/reviews.module';
     CategoriesModule,
     TagsModule,
     ReviewsModule,
+    UsersModule,
   ],
   providers: [ProductsService],
   controllers: [ProductsController],

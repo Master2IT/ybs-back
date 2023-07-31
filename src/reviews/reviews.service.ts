@@ -48,7 +48,7 @@ export class ReviewsService {
       // status: 'active',
     });
     return await Promise.all(
-      reviews.map(async (review) => ({
+      reviews.map(async (review: any) => ({
         _id: review._id,
         rate: review.rate,
         title: review.title,
@@ -57,6 +57,8 @@ export class ReviewsService {
         images: await this.reviewGalleriesService.getReviewGalleriesById(
           review._id,
         ),
+        userId: review.userId,
+        createdAt: review.createdAt,
       })),
     );
   }

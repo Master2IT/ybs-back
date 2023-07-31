@@ -26,6 +26,12 @@ export class UsersService {
   async getUserById(userId) {
     return this.userModel.findOne({ _id: userId });
   }
+  async getUserNameById(userId) {
+    const user = await this.userModel.findOne({ _id: userId });
+    if (user) {
+      return user.name;
+    }
+  }
 
   async findUserByEmailOrPhone({ email, phone }) {
     if (email) {

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateCategory } from './categories.interface';
@@ -26,6 +26,7 @@ export class CategoriesService {
       })),
     );
   }
+
   async getCategories() {
     const categories = await this.categoriesModel.find();
 
@@ -59,5 +60,12 @@ export class CategoriesService {
       status: 'active',
     } as CreateCategory);
     return await newCategory.save();
+  }
+
+  async getCategoryByTitle(title) {
+    return this.categoriesModel.findOne({
+      title,
+      status: 'active',
+    });
   }
 }

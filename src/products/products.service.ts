@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -118,23 +119,25 @@ export class ProductsService {
 
     return {
       data: await Promise.all(
-        products?.map(async (item: any) => ({
-          _id: item?._doc._id,
-          name: item?._doc.name,
-          price: item?._doc.price,
-          discountPrice: await this.calculateDiscount(item?._doc),
-          discount: await this.discountService.getOne(item.discountId, true),
-          category: await this.filterCategory(item?._doc.categoryId),
-          // quantity: item?._doc.quantity,
-          // sku: item?._doc.skuId,
-          // status: item?._doc.status,
-          createdAt: item?._doc.createdAt,
-          updatedAt: item?._doc.updatedAt,
-          description: item?._doc.description,
-          galleries: await this.galleriesService.getImages(item?._doc?._id),
-          colors: await this.filterColors(item?._doc?.attributes?.colorIds),
-          sizes: await this.filterSizes(item?._doc?.attributes?.sizeIds),
-        })),
+        products
+          ?.map(async (item: any) => ({
+            _id: item?._doc._id,
+            name: item?._doc.name,
+            price: item?._doc.price,
+            discountPrice: await this.calculateDiscount(item?._doc),
+            discount: await this.discountService.getOne(item.discountId, true),
+            category: await this.filterCategory(item?._doc.categoryId),
+            // quantity: item?._doc.quantity,
+            // sku: item?._doc.skuId,
+            // status: item?._doc.status,
+            createdAt: item?._doc.createdAt,
+            updatedAt: item?._doc.updatedAt,
+            description: item?._doc.description,
+            galleries: await this.galleriesService.getImages(item?._doc?._id),
+            colors: await this.filterColors(item?._doc?.attributes?.colorIds),
+            sizes: await this.filterSizes(item?._doc?.attributes?.sizeIds),
+          }))
+          .reverse(),
       ),
       total: products.length,
     };
@@ -241,6 +244,38 @@ export class ProductsService {
       ),
       total: products.length,
     };
+  }
+
+  async searchProduct(search) {
+    if (!search || search.length < 3) {
+      throw new BadRequestException();
+    }
+    return this.productsModel.find({ name: { $regex: search, $options: 'i' } });
+  }
+
+  async searchProductByCategoryId(categoryId) {
+    const products = await this.productsModel.find({ categoryId });
+    return Promise.all(
+      products
+        ?.map(async (item: any) => ({
+          _id: item?._doc._id,
+          name: item?._doc.name,
+          price: item?._doc.price,
+          discountPrice: await this.calculateDiscount(item?._doc),
+          discount: await this.discountService.getOne(item.discountId, true),
+          category: await this.filterCategory(item?._doc.categoryId),
+          // quantity: item?._doc.quantity,
+          // sku: item?._doc.skuId,
+          // status: item?._doc.status,
+          createdAt: item?._doc.createdAt,
+          updatedAt: item?._doc.updatedAt,
+          description: item?._doc.description,
+          galleries: await this.galleriesService.getImages(item?._doc?._id),
+          colors: await this.filterColors(item?._doc?.attributes?.colorIds),
+          sizes: await this.filterSizes(item?._doc?.attributes?.sizeIds),
+        }))
+        .reverse(),
+    );
   }
 
   async create(product: CreateProduct): Promise<any> {

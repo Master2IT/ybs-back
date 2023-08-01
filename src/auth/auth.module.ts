@@ -22,6 +22,7 @@ import { SubscribersModule } from '../subscribers/subscribers.module';
 import { ReviewsModule } from '../reviews/reviews.module';
 import { ReviewGalleriesModule } from '../reviews/galleries/galleries.module';
 import { ReviewReactionsModule } from '../reviews/reactions/reactions.module';
+import { SearchModule } from '../search/search.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ReviewReactionsModule } from '../reviews/reactions/reactions.module';
     ReviewsModule,
     ReviewGalleriesModule,
     ReviewReactionsModule,
+    SearchModule,
   ],
   controllers: [AuthController],
   providers: [JwtStrategy, AuthService],
